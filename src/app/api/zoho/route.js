@@ -44,7 +44,10 @@ export async function handler(request) {
   console.log('')
 
   // Construct Zoho URL
-  const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
+  // const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
+
+  const decodedEndpoint = decodeURIComponent(criteria ? endpointWithQuery : endpoint);
+  const zohoUrl = `https://www.zohoapis.in${decodedEndpoint}`;
 
   console.log({ zohoUrl })
   try {

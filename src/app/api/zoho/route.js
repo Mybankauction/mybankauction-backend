@@ -46,9 +46,10 @@ export async function handler(request) {
   // Construct Zoho URL
   // const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
 
-  if (endpointWithQuery.includes('(Auction')) {
+  if (endpointWithQuery.includes('(Auction') || endpointWithQuery.includes('%28Auction')) {
     endpointWithQuery = endpointWithQuery.replace('greater_than:0', 'greater_than:0&');
   }
+
   const decodedEndpoint = decodeURIComponent(criteria ? endpointWithQuery : endpoint);
   const zohoUrl = `https://www.zohoapis.in${decodedEndpoint}`;
 

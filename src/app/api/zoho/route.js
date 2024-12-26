@@ -8,7 +8,7 @@ export const formattedDate = (date) => {
 // Common handler for different HTTP methods
 export async function handler(request) {
   const reqUrl = request.url
-  const endpointWithQuery = reqUrl.split('?endpoint=')[1];
+  let endpointWithQuery = reqUrl.split('?endpoint=')[1];
   const url = new URL(request.url)
   let criteria
   const endpoint = url.searchParams.get('endpoint')
@@ -46,6 +46,9 @@ export async function handler(request) {
   // Construct Zoho URL
   // const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
 
+  if (endpointWithQuery.includes('(Auction')) {
+    endpointWithQuery = endpointWithQuery.replace('greater_than:0', 'greater_than:0&');
+  }
   const decodedEndpoint = decodeURIComponent(criteria ? endpointWithQuery : endpoint);
   const zohoUrl = `https://www.zohoapis.in${decodedEndpoint}`;
 

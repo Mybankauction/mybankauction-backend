@@ -114,7 +114,7 @@ export async function handler(request) {
 
   } catch (error) {
     // Catch any unexpected errors and return to the client
-    return NextResponse.json({ error: 'Internal Server Error', details: error, url: zohoUrl }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error', details: error, url: zohoUrl, endpointWithQuery: endpointWithQuery, endpoint: endpoint, criteria: criteria, reqUrl: reqUrl }, { status: 500 });
   }
 
 }

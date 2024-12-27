@@ -4,21 +4,37 @@ export const formattedDate = (date) => {
   if (!date) return ''
   return new Date(date).toISOString().replace('.000Z', '+05:30')
 }
+// const localURLPrefix = "https://mybankauction-backend.vercel.app/api/zoho?endpoint=";
 
-function replaceAndDecodeURL(reqUrl) {
+function replaceAndEncodeDateInURL(reqUrl) {
   const baseURL = "https://www.zohoapis.in";
+  // const localURLPrefix = "http://localhost:3000/api/zoho?endpoint=";
   const localURLPrefix = "https://mybankauction-backend.vercel.app/api/zoho?endpoint=";
 
-  // Decode the entire URL
+
+  // Decode the entire URL first
   const decodedUrl = decodeURIComponent(reqUrl);
 
   // Replace the local URL prefix with the base URL
-  if (decodedUrl.startsWith(localURLPrefix)) {
-    const newURL = decodedUrl.replace(localURLPrefix, baseURL);
-    return newURL;
+  let newURL = decodedUrl.replace(localURLPrefix, baseURL);
+
+  // Use regex to find and encode date parts if they exist
+  const startDateRegex = /Auction_start_date:greater_than:([^&]*)/g;
+  const endDateRegex = /Auction_end_date:less_than:([^&]*)/g;
+
+  if (startDateRegex.test(newURL)) {
+    newURL = newURL.replace(startDateRegex, (match, p1) => {
+      return `Auction_start_date:greater_than:${encodeURIComponent(p1)}`;
+    });
   }
 
-  return decodedUrl;
+  if (endDateRegex.test(newURL)) {
+    newURL = newURL.replace(endDateRegex, (match, p1) => {
+      return `Auction_end_date:less_than:${encodeURIComponent(p1)}`;
+    });
+  }
+
+  return newURL;
 }
 
 
@@ -52,7 +68,7 @@ export async function handler(request) {
   }
 
   // const zohoUrl = `https://www.zohoapis.in${endpoint}`;
-  const zohoUrl = replaceBaseURL(reqUrl)
+  const zohoUrl = replaceAndEncodeDateInURL(reqUrl)
 
   console.log({ zohoUrl })
   try {

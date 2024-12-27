@@ -1,8 +1,20 @@
-import { NextResponse } from 'next/server'
+import { NextResponse } from 'next/server';
 
 export const formattedDate = (date) => {
   if (!date) return ''
   return new Date(date).toISOString().replace('.000Z', '+05:30')
+}
+
+function replaceBaseURL(reqUrl) {
+  const baseURL = "https://www.zohoapis.in";
+  const localURLPrefix = "http://localhost:3000/api/zoho?endpoint=";
+
+  if (reqUrl.startsWith(localURLPrefix)) {
+    const newURL = reqUrl.replace(localURLPrefix, baseURL);
+    return newURL;
+  }
+
+  return reqUrl;
 }
 
 // Common handler for different HTTP methods
@@ -19,12 +31,6 @@ export async function handler(request) {
     criteria = endpointUrl.searchParams.get('criteria');
   }
 
-  console.log({ criteria }, 'criteria')
-
-  console.log("")
-  console.log({ endpointWithQuery }, { reqUrl }, { url }, { endpoint }, { criteria })
-  console.log("")
-
   if (!endpoint) {
     return NextResponse.json(
       { error: 'Endpoint parameter is required' },
@@ -39,19 +45,9 @@ export async function handler(request) {
       { status: 401 }
     )
   }
-  console.log('')
 
-  console.log({ criteria })
-  console.log('')
-
-  // Construct Zoho URL
-  // const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
-
-  // if (endpointWithQuery.includes('(Auction')) {
-  //   endpointWithQuery = endpointWithQuery.replace('greater_than:0', 'greater_than:0&');
-  // }
-  const decodedEndpoint = criteria ? endpointWithQuery : decodeURIComponent(endpoint);
-  const zohoUrl = `https://www.zohoapis.in${decodedEndpoint}`;
+  // const zohoUrl = `https://www.zohoapis.in${endpoint}`;
+  const zohoUrl = replaceBaseURL(reqUrl)
 
   console.log({ zohoUrl })
   try {
@@ -89,8 +85,9 @@ export async function handler(request) {
 
     // Handle unsuccessful responses
     if (!response.ok) {
+      // returns if url is wrong
       return NextResponse.json(
-        { error: 'Failed to fetch data from Zoho API', details: response.statusText, url: zohoUrl },
+        { error: 'Failed to fetch data from Zoho API', details: response.statusText, url: zohoUrl, url: zohoUrl, endpointWithQuery: endpointWithQuery, endpoint: endpoint, criteria: criteria, reqUrl: reqUrl },
         { status: response.status }
       );
     }

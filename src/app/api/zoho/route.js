@@ -9,6 +9,7 @@ export const formattedDate = (date) => {
 export async function handler(request) {
   const reqUrl = request.url
   let endpointWithQuery = reqUrl.split('?endpoint=')[1];
+  console.log('...............................................................................................')
   const url = new URL(request.url)
   let criteria
   const endpoint = url.searchParams.get('endpoint')
@@ -83,13 +84,13 @@ export async function handler(request) {
 
     // Handle 204 No Content
     if (response.status === 204) {
-      return new NextResponse(null, { status: 204 });
+      return new NextResponse(null, { status: 204 }, { url: zohoUrl });
     }
 
     // Handle unsuccessful responses
     if (!response.ok) {
       return NextResponse.json(
-        { error: 'Failed to fetch data from Zoho API', details: response.statusText },
+        { error: 'Failed to fetch data from Zoho API', details: response.statusText, url: zohoUrl },
         { status: response.status }
       );
     }
@@ -100,7 +101,7 @@ export async function handler(request) {
       try {
         data = await response.json();
       } catch (jsonError) {
-        return NextResponse.json({ error: 'Failed to parse JSON response' }, { status: 500 });
+        return NextResponse.json({ error: 'Failed to parse JSON response', url: zohoUrl }, { status: 500 });
       }
     }
 
@@ -113,7 +114,7 @@ export async function handler(request) {
 
   } catch (error) {
     // Catch any unexpected errors and return to the client
-    return NextResponse.json({ error: 'Internal Server Error', details: error.message }, { status: 500 });
+    return NextResponse.json({ error: 'Internal Server Error', details: error, url: zohoUrl }, { status: 500 });
   }
 
 }

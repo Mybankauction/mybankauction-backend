@@ -8,15 +8,13 @@ export const formattedDate = (date) => {
 // Common handler for different HTTP methods
 export async function handler(request) {
   const reqUrl = request.url
-  const endpointWithQuery = reqUrl.split('?endpoint=')[1];
-  const endpoint = url.searchParams.get('endpoint')
-
+  let endpointWithQuery = reqUrl.split('?endpoint=')[1];
   const url = new URL(request.url)
   let criteria
+  const endpoint = url.searchParams.get('endpoint')
 
   if (endpoint) {
     const endpointUrl = new URL(endpoint, url.origin);
-    console.log(endpointUrl, 'endpointUrl')
     criteria = endpointUrl.searchParams.get('criteria');
   }
 
@@ -45,6 +43,12 @@ export async function handler(request) {
   console.log({ criteria })
   console.log('')
 
+  // Construct Zoho URL
+  // const zohoUrl = `https://www.zohoapis.in${criteria ? `${endpointWithQuery}` : `${endpoint}`}`;
+
+  // if (endpointWithQuery.includes('(Auction')) {
+  //   endpointWithQuery = endpointWithQuery.replace('greater_than:0', 'greater_than:0&');
+  // }
   const decodedEndpoint = criteria ? endpointWithQuery : decodeURIComponent(endpoint);
   const zohoUrl = `https://www.zohoapis.in${decodedEndpoint}`;
 
@@ -85,7 +89,7 @@ export async function handler(request) {
     // Handle unsuccessful responses
     if (!response.ok) {
       return NextResponse.json(
-        { error: 'Failed to fetch data from Zoho API', details: response },
+        { error: 'Failed to fetch data from Zoho API', details: response.statusText },
         { status: response.status }
       );
     }

@@ -15,6 +15,7 @@ export async function handler(request) {
 
   if (endpoint) {
     const endpointUrl = new URL(endpoint, url.origin);
+    console.log(endpointUrl, 'endpointUrl')
     criteria = endpointUrl.searchParams.get('criteria');
   }
 
@@ -90,7 +91,7 @@ export async function handler(request) {
     // Handle unsuccessful responses
     if (!response.ok) {
       return NextResponse.json(
-        { error: 'Failed to fetch data from Zoho API', details: response.statusText },
+        { error: 'Failed to fetch data from Zoho API', details: response },
         { status: response.status }
       );
     }

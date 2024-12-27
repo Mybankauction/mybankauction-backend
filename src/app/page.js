@@ -2,25 +2,12 @@
 
 export default function Home() {
   const signupApi = async () => {
-    const res = await fetch('http://localhost:3000/api/zoho/signup', {
-      method: 'POST',
+    const res = await fetch('https://www.zohoapis.in/crm/v7/Accounts/search?criteria=Reserve_price:greater_than:0(Auction_end_date%3Aless_than%3A2025-01-03T18%3A30%3A00%2B05%3A30)&page=1&per_page=300', {
       headers: {
         Authorization:
-          'Zoho-oauthtoken 1000.7f7fc5ad62ebc611ce5769620ea6563e.e3d985dc85bb69ec44115a0a1d19c246',
+          'Zoho-oauthtoken 1000.a8f2ffb710311899b1a58563d982c038.6bcdd95ed4c1dc0420c60014a5c6b62b',
         'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        data: [
-          {
-            Name1: 'gwegwewe we fwef w',
-            Phone: '6454545454',
-            Email: 'knfiwnefwe@kwofweffoew',
-            referral_id: '1952',
-            referred_by: '',
-            Last_Name: 'gwegwewe we fwef w',
-          },
-        ],
-      }),
+      }
     })
     const data = await res.json()
     console.log(data)

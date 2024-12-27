@@ -8,11 +8,8 @@ export const formattedDate = (date) => {
 // Common handler for different HTTP methods
 export async function handler(request) {
   const reqUrl = request.url
-  // const endpointWithQuery = reqUrl.split('?endpoint=')[1];
-  // const endpoint = url.searchParams.get('endpoint')
-  const endpointWithQuery = reqUrl.includes('%') ? decodeURIComponent(reqUrl.split('?endpoint=')[1]) : reqUrl.split('?endpoint=')[1];
-  const endpoint = reqUrl.includes('%') ? decodeURIComponent(url.searchParams.get('endpoint')) : url.searchParams.get('endpoint');
-
+  const endpointWithQuery = reqUrl.split('?endpoint=')[1];
+  const endpoint = url.searchParams.get('endpoint')
 
   const url = new URL(request.url)
   let criteria

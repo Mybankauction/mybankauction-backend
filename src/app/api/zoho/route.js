@@ -5,17 +5,22 @@ export const formattedDate = (date) => {
   return new Date(date).toISOString().replace('.000Z', '+05:30')
 }
 
-function replaceBaseURL(reqUrl) {
+function replaceAndDecodeURL(reqUrl) {
   const baseURL = "https://www.zohoapis.in";
-  const localURLPrefix = "http://localhost:3000/api/zoho?endpoint=";
+  const localURLPrefix = "https://mybankauction-backend.vercel.app/api/zoho?endpoint=";
 
-  if (reqUrl.startsWith(localURLPrefix)) {
-    const newURL = reqUrl.replace(localURLPrefix, baseURL);
+  // Decode the entire URL
+  const decodedUrl = decodeURIComponent(reqUrl);
+
+  // Replace the local URL prefix with the base URL
+  if (decodedUrl.startsWith(localURLPrefix)) {
+    const newURL = decodedUrl.replace(localURLPrefix, baseURL);
     return newURL;
   }
 
-  return reqUrl;
+  return decodedUrl;
 }
+
 
 // Common handler for different HTTP methods
 export async function handler(request) {

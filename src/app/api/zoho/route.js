@@ -99,17 +99,10 @@ export async function handler(request) {
           { status: 405 }
         )
     }
-    if (response) {
-      return NextResponse({ res: response })
-    }
 
     // Handle 204 No Content
     if (response.status === 204) {
       return new NextResponse(null, { status: 204 }, { url: zohoUrl })
-    }
-
-    if (response.data[0].code === 'DUPLICATE_DATA') {
-      return NextResponse.json({ message: 'User already exists' })
     }
 
     // Handle unsuccessful responses
@@ -117,7 +110,6 @@ export async function handler(request) {
       // returns if url is wrong
       return NextResponse.json(
         {
-          response: response,
           error: 'Failed to fetch data from Zoho API',
           details: response.statusText,
           url: zohoUrl,
